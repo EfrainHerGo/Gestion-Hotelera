@@ -11,9 +11,11 @@
 	<groupId>com.efrain</groupId>
 	<artifactId>huesped</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
 	<name/>
 	<description/>
 	<url/>
+
 	<licenses>
 		<license/>
 	</licenses>
@@ -38,6 +40,12 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.efrain</groupId>
+			<artifactId>Common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
