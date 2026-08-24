@@ -1,18 +1,16 @@
 package com.efrain.habitaciones.controller;
 
 import com.efrain.Common.controllers.CommonController;
-import com.efrain.Common.dto.HabitacionRequest;
-import com.efrain.Common.dto.HabitacionResponse;
+import com.efrain.Common.dto.Habitacion.HabitacionRequest;
+import com.efrain.Common.dto.Habitacion.HabitacionResponse;
 import com.efrain.habitaciones.service.HabitacionService;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/habitaciones")
 @RestController
 @Validated
 public class HabitacionController

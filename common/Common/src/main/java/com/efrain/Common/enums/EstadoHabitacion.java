@@ -5,13 +5,16 @@ import lombok.Getter;
 @Getter
 public enum EstadoHabitacion {
 
-    DISPONIBLE("DISPONIBLE"),
-    OCUPADA("OCUPADA"),
-    MANTENIMIENTO("MANTENIMIENTO");
+    DISPONIBLE(1, "DISPONIBLE"),
+    OCUPADA(2, "OCUPADA"),
+    LIMPIE(3, "LIMPIE"),
+    MANTENIMIENTO(4, "MANTENIMIENTO");
 
+    private final Integer id;
     private final String codigo;
 
-    EstadoHabitacion(String codigo) {
+    EstadoHabitacion(Integer id, String codigo) {
+        this.id = id;
         this.codigo = codigo;
     }
 }
