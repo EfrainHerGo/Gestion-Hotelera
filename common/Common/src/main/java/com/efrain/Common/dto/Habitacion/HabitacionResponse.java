@@ -1,4 +1,4 @@
-package com.efrain.Common.dto;
+package com.efrain.Common.dto.Habitacion;
 import java.math.BigDecimal;
 
 public record HabitacionResponse(

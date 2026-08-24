@@ -1,7 +1,7 @@
 package com.efrain.habitaciones.service;
 
-import com.efrain.Common.dto.HabitacionRequest;
-import com.efrain.Common.dto.HabitacionResponse;
+import com.efrain.Common.dto.Habitacion.HabitacionRequest;
+import com.efrain.Common.dto.Habitacion.HabitacionResponse;
 import com.efrain.Common.enums.EstadoRegistro;
 import com.efrain.Common.exceptions.RecursoNoEncontradoException;
 import com.efrain.habitaciones.entity.Habitaciones;
