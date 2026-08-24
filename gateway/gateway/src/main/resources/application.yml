@@ -1,4 +1,22 @@
-spring:gitr branch 
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    loadbalancer:
+      enabled: true
+
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: habitaciones
+              uri: lb://habitaciones
+              predicates:
+                - Path=/api/habitaciones/**
+              filters:
+                - StripPrefix=2
+
             - id: huesped
               uri: lb://huesped
               predicates:

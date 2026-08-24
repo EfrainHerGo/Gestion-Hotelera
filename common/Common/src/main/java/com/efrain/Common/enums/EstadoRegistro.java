@@ -4,12 +4,8 @@ import lombok.Getter;
 @Getter
 public enum EstadoRegistro {
 
-    ACTIVO("ACTIVO"),
-    INACTIVO("INACTIVO");
+    ACTIVO,
+    ELIMINADO;
 
-    private final String codigo;
 
-    EstadoRegistro(String codigo) {
-        this.codigo = codigo;
-    }
 }
