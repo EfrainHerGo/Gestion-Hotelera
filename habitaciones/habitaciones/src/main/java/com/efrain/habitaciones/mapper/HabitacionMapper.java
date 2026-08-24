@@ -1,7 +1,7 @@
 package com.efrain.habitaciones.mapper;
 
-import com.efrain.Common.dto.HabitacionRequest;
-import com.efrain.Common.dto.HabitacionResponse;
+import com.efrain.Common.dto.Habitacion.HabitacionRequest;
+import com.efrain.Common.dto.Habitacion.HabitacionResponse;
 import com.efrain.Common.mapper.CommonMapper;
 import com.efrain.habitaciones.entity.Habitaciones;
 import org.springframework.stereotype.Component;
