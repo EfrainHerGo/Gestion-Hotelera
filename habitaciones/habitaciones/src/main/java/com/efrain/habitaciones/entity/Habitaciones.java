@@ -60,5 +60,5 @@ public class Habitaciones {
     }
     public void establecerEstadoInicial() {
         this.estadoHabitacion = EstadoHabitacion.DISPONIBLE;
-    }
-}
+        this.estadoRegistro = EstadoRegistro.ACTIVO;
+    }}

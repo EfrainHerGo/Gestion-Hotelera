@@ -113,7 +113,7 @@ public class HabitacionServiceImpl implements HabitacionService {
         log.info("Buscando habitación con id {}", id);
 
         return habitacionesRepository
-                .findByIdAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
+                .findByIdHabitacionesAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
                 .orElseThrow(() ->
                         new RecursoNoEncontradoException(
                                 "No se encontró la habitación activa con id " + id
