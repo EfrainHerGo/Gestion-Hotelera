@@ -10,6 +10,16 @@ spring:
       server:
         webflux:
           routes:
+<<<<<<< HEAD
+=======
+            - id: habitaciones
+              uri: lb://habitaciones
+              predicates:
+                - Path=/api/habitaciones/**
+              filters:
+                - StripPrefix=2
+
+>>>>>>> d0d11b5 (CRUD actualización)
             - id: huesped
               uri: lb://huesped
               predicates:
