@@ -29,7 +29,7 @@ public record HuespedRequest(
         String documento,
         @NotBlank(message = "La nacionalidad es requerida")
         @Size(min = 12, max = 12, message = "La nacionadlidad debe tener exacatemnte 12 caracteres")
-                String nacionalidad
+        String nacionalidad
 
 
 ) {
