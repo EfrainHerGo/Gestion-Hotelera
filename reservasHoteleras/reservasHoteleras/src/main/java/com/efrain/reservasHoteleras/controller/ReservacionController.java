@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,9 +20,13 @@ public class ReservacionController
     public ReservacionController(ReservacionService service) {
         super(service);
     }
-    public ResponseEntity<ReservacionResponse> obtenterReservacionPorIdSinEstado(
-            @PathVariable @Positive(message = "El id debe ser positivo") Long id
-    ){
-        return ResponseEntity.ok(service.obtenerreservacionPorIdSinEstado(id));
+    @GetMapping("/id-huesped/{idHuesped}")
+    public ResponseEntity<Void>  obtenerReservacionesActivasHuesped(
+            @PathVariable @Positive(message = "EL id del huesped debe ser positivo") Long idHuesped) {
+        service.existeReservacionActivaPorHuesped(idHuesped);
+        return ResponseEntity.noContent().build();
     }
+
+
+
 }
