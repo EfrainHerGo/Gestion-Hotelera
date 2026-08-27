@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 public record HabitacionRequest(
 
+
         @NotNull(message = "Es requerido")
         @Positive(message = "El número de habitación debe ser mayor a 0")
         Integer numeroHabitacion,

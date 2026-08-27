@@ -1,6 +1,6 @@
 package com.efrain.gateway.configuration;
 
-import java.util.List;
+/*import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +10,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfiguration;*/
 
-@Configuration
+//@Configuration
 public class SecurityConfig {
 
-    @Bean
+    /*@Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 
         http.csrf(csrf -> csrf.disable())
@@ -28,13 +28,13 @@ public class SecurityConfig {
                     return corsConfiguration;
                 })).authorizeExchange(exchange -> exchange
                         .pathMatchers("/**").permitAll()
-                        /*.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        *//*.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/**").hasAnyRole("ADMIN", "USER")
                         .pathMatchers(HttpMethod.POST, "/**").hasAnyRole("ADMIN", "USER")
                         .pathMatchers(HttpMethod.PUT, "/**").hasAnyRole("ADMIN", "USER")
                         .pathMatchers(HttpMethod.PATCH, "/**").hasAnyRole("ADMIN", "USER")
                         .pathMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
-                        .anyExchange().authenticated()*/
+                        .anyExchange().authenticated()*//*
                 ).oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                         jwt.jwtAuthenticationConverter(reactiveJwtAuthenticationConverterAdapter())));
 
@@ -51,6 +51,6 @@ public class SecurityConfig {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
-    }
+    }*/
 
 }

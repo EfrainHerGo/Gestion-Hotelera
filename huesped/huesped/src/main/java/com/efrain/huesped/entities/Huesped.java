@@ -15,10 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class Huesped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_HUESPED")
     private Long id;
+
     @Column(name = "NOMBRE", nullable = false, length = 50)
     private String nombre;
 
@@ -34,52 +36,49 @@ public class Huesped {
     @Column(name = "TELEFONO", nullable = false, length = 10)
     private String telefono;
 
-    @Column(name = "DOCUMENTO", length = 12, nullable = false)
+    @Column(name = "DOCUMENTO", nullable = false, length = 20)
     private String documento;
 
-    @Column(name = "Nacionalidad", nullable = false)
+    @Column(name = "NACIONALIDAD", nullable = false, length = 50)
     private String nacionalidad;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_REGISTRO", nullable = false)
     private EstadoRegistro estadoRegistro;
 
-    private void validadDatos(String nombre, String apellidoPaterno,
-                              String apellidoMaterno, String email,
-                              String telefono, String documento,String nacionalidad) {
-        StringCustomUtils.validarTamanio(nombre, 1, 50,
-                "El nombre es requerido y debe contener entre 1 y 50 caracteres");
-        StringCustomUtils.validarTamanio(apellidoPaterno, 1, 50,
-                "El apellido paterno es requerido y debe contener entre 1 y 50 caracteres");
-        StringCustomUtils.validarTamanio(apellidoMaterno, 1, 50,
-                "El apellido materno es requerido y debe contener entre 1 y 50 caracteres");
-        StringCustomUtils.validarTamanio(email, 1, 100,
-                "El email es requerido y debe contener entre 1 y 50 caracteres");
+    private void validarDatos(String nombre, String apellidoPaterno, String apellidoMaterno,
+                              String email, String telefono, String documento, String nacionalidad) {
+        StringCustomUtils.validarTamanio(nombre, 2, 50,
+                "El nombre es requerido y debe contener entre 2 y 50 caracteres");
+        StringCustomUtils.validarTamanio(apellidoPaterno, 2, 50,
+                "El apellido paterno es requerido y debe contener entre 2 y 50 caracteres");
+        StringCustomUtils.validarTamanio(apellidoMaterno, 2, 50,
+                "El apellido materno es requerido y debe contener entre 2 y 50 caracteres");
+        StringCustomUtils.validarTamanio(email, 5, 100,
+                "El email es requerido y debe tener un formato válido");
         StringCustomUtils.validarTamanio(telefono, 10, 10,
-                "El telefono es requerido y debe contener 10 caracteres");
+                "El teléfono es requerido y debe contener exactamente 10 dígitos");
         StringCustomUtils.validarTamanio(documento, 1, 20,
-                "La documento es requerido y debe contener entre 1 a 20 caracteres");
+                "El documento es requerido y debe contener máximo 20 caracteres");
         StringCustomUtils.validarTamanio(nacionalidad, 1, 50,
-                "La nacionalidad es requerido y debe contener entre 1 a 50 caracteres");
-
-
+                "La nacionalidad es requerida y debe contener máximo 50 caracteres");
     }
-    public void validarNoEliminado(){
-        if (this.estadoRegistro == EstadoRegistro.ELIMINADO)
-            throw new IllegalArgumentException("El medico ya est eliminado");
+
+    public void validarNoEliminado() {
+        if (this.estadoRegistro == EstadoRegistro.ELIMINADO) {
+            throw new IllegalArgumentException("El huésped ya se encuentra eliminado");
+        }
     }
-    public  void eliminar (){
+
+    public void eliminar() {
         validarNoEliminado();
         this.estadoRegistro = EstadoRegistro.ELIMINADO;
-
     }
 
-    public void actualizar(String nombre, String apellidoPaterno,
-                           String apellidoMaterno, String email,
-                           String telefono, String documento,String nacionalidad) {
+    public void actualizar(String nombre, String apellidoPaterno, String apellidoMaterno,
+                           String email, String telefono, String documento, String nacionalidad) {
         validarNoEliminado();
-        validadDatos(nombre, apellidoPaterno, apellidoMaterno,
-                email, telefono, documento, nacionalidad);
+        validarDatos(nombre, apellidoPaterno, apellidoMaterno, email, telefono, documento, nacionalidad);
         this.nombre = nombre.trim();
         this.apellidoPaterno = apellidoPaterno.trim();
         this.apellidoMaterno = apellidoMaterno.trim();
@@ -88,5 +87,4 @@ public class Huesped {
         this.documento = documento.trim();
         this.nacionalidad = nacionalidad.trim();
     }
-
 }
