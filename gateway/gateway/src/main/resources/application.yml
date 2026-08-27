@@ -10,16 +10,6 @@ spring:
       server:
         webflux:
           routes:
-<<<<<<< HEAD
-=======
-            - id: habitaciones
-              uri: lb://habitaciones
-              predicates:
-                - Path=/api/habitaciones/**
-              filters:
-                - StripPrefix=2
-
->>>>>>> d0d11b5 (CRUD actualización)
             - id: huesped
               uri: lb://huesped
               predicates:
@@ -27,17 +17,24 @@ spring:
               filters:
                 - StripPrefix=2
 
-            - id: paciente
-              uri: lb://paciente
+            - id: usuarios
+              uri: lb://usuarios
               predicates:
-                - Path=/api/paciente/**
+                - Path=/api/usuarios/**
               filters:
                 - StripPrefix=2
 
-            - id: citas
-              uri: lb://citas
+            - id: reservasHoteleras
+              uri: lb://reservasHoteleras
               predicates:
-                - Path=/api/citas/**
+                - Path=/api/reservaciones/**
+              filters:
+                - StripPrefix=2
+
+            - id: habitaciones
+              uri: lb://habitaciones
+              predicates:
+                - Path=/api/habitaciones/**
               filters:
                 - StripPrefix=2
 

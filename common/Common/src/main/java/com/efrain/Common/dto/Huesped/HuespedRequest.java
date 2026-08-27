@@ -15,9 +15,7 @@ public record HuespedRequest(
         @NotBlank(message = "El apellido materno es requerido")
         @Size(min = 5, max = 50, message = "El apellido materno debe tener entre 5 y 50 caracteres")
         String apellidoMaterno,
-        @NotNull(message = "La edad es requerido")
-        @Positive(message = "La edad debe ser positiva")
-        Short edad,
+
         @NotBlank(message = "El correo es requerido")
         @Size(min = 5, max = 100, message = "El corre debe tener entre 5 y 100 caracteres")
         String email,
