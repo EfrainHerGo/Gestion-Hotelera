@@ -2,6 +2,7 @@ package com.efrain.habitaciones.service;
 
 import com.efrain.Common.dto.Habitacion.HabitacionRequest;
 import com.efrain.Common.dto.Habitacion.HabitacionResponse;
+import com.efrain.Common.enums.EstadoHabitacion;
 import com.efrain.Common.enums.EstadoRegistro;
 import com.efrain.Common.exceptions.RecursoNoEncontradoException;
 import com.efrain.habitaciones.entity.Habitaciones;
@@ -98,18 +99,42 @@ public class HabitacionServiceImpl implements HabitacionService {
 
     @Override
     public void eliminar(Long id) {
+        Habitaciones habitacion = obtenerHabitacionActivaOrExcep(id);
+        if (habitacion.getEstadoHabitacion() == EstadoHabitacion.OCUPADA) {
+            throw new IllegalStateException(
+                    "No se puede eliminar una habitación OCUPADA"
+            );
+        }
+        habitacion.eliminar();
+        log.info("Habitación eliminada");
+    }
+    @Override
+    public void cambiarEstado(Long id, Long idEstado) {
 
         Habitaciones habitacion = obtenerHabitacionActivaOrExcep(id);
 
-        log.info("Eliminando habitación {}", id);
+        log.info(
+                "Cambiando estado de Habitacion {} a {}...",
+                id,
+                idEstado
+        );
 
-        habitacion.eliminar();
+        EstadoHabitacion nuevoEstado =
+                EstadoHabitacion.obtenerEstadoHabitacionPorCodigo(idEstado);
 
-        log.info("Habitación {} ha sido INACTIVADA", id);
+        EstadoHabitacion estadoAnterior =
+                habitacion.getEstadoHabitacion();
+
+        habitacion.cambiarEstado(nuevoEstado);
+
+        log.info(
+                "Estado de la habitación {} cambiado de {} a {}",
+                id,
+                estadoAnterior,
+                nuevoEstado
+        );
     }
-
     private Habitaciones obtenerHabitacionActivaOrExcep(Long id) {
-
         log.info("Buscando habitación con id {}", id);
 
         return habitacionesRepository

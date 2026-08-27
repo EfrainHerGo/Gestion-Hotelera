@@ -61,4 +61,17 @@ public class Habitaciones {
     public void establecerEstadoInicial() {
         this.estadoHabitacion = EstadoHabitacion.DISPONIBLE;
         this.estadoRegistro = EstadoRegistro.ACTIVO;
-    }}
+    }
+    public void cambiarEstado(EstadoHabitacion nuevoEstado) {
+
+        if (this.estadoHabitacion == EstadoHabitacion.OCUPADA
+                && nuevoEstado == EstadoHabitacion.DISPONIBLE) {
+
+            throw new IllegalStateException(
+                    "No se puede cambiar manualmente una habitación OCUPADA a DISPONIBLE"
+            );
+        }
+
+        this.estadoHabitacion = nuevoEstado;
+    }
+}
