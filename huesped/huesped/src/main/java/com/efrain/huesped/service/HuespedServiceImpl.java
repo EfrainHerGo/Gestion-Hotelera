@@ -1,9 +1,11 @@
 package com.efrain.huesped.service;
 
+import com.efrain.Common.client.ReservacionClient;
 import com.efrain.Common.dto.Huesped.HuespedRequest;
 import com.efrain.Common.dto.Huesped.HuespedResponse;
 import com.efrain.Common.enums.EstadoRegistro;
 import com.efrain.Common.exceptions.RecursoNoEncontradoException;
+
 import com.efrain.huesped.entities.Huesped;
 import com.efrain.huesped.mappers.HuespedMappers;
 import com.efrain.huesped.repository.HuespedRepository;
@@ -19,43 +21,53 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class HuespedServiceImpl implements HuespedService {
+
     private final HuespedRepository huespedRepository;
     private final HuespedMappers huespedMappers;
-
+    private final ReservacionClient reservaClient;
 
     @Override
+    @Transactional(readOnly = true)
     public HuespedResponse obtenerHuespedPorIdSinEstado(Long id) {
-        return null;
+        log.info("Obteniendo huésped por ID sin validar estado registro: {}", id);
+        return huespedRepository.findById(id)
+                .map(huespedMappers::entidadResponse)
+                .orElseThrow(() -> new IllegalArgumentException("Huésped no encontrado con el id: " + id));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<HuespedResponse> listar() {
-        log.info("Listado de huespedes");
+        log.info("Obteniendo listado de huéspedes activos");
         return huespedRepository.findByEstadoRegistro(EstadoRegistro.ACTIVO).stream()
-                .map(huespedMappers::entidadResponse).toList();
+                .map(huespedMappers::entidadResponse)
+                .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HuespedResponse obtenerPorId(Long id) {
-        log.info("Huespe por id");
-        return huespedMappers.entidadResponse(huespedRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Huesped con el id {} no encontrado" + id )));
+        log.info("Obteniendo huésped activo por id: {}", id);
+        return huespedMappers.entidadResponse(obtenerHuespedActivoOException(id));
     }
 
     @Override
     public HuespedResponse registrar(HuespedRequest request) {
-       log.info("Registrar al medico");
-       validarDatosUnicos(request);
-       Huesped huesped = huespedMappers.requestAEntidad(request);
-       huespedRepository.save(huesped);
-       log.info("Registrado con exito");
+        log.info("Registrando nuevo huésped: {}", request.email());
+        validarDatosUnicos(request);
+
+        Huesped huesped = huespedMappers.requestAEntidad(request);
+        huespedRepository.save(huesped);
+
+        log.info("Huésped registrado con éxito con ID: {}", huesped.getId());
         return huespedMappers.entidadResponse(huesped);
     }
 
     @Override
     public HuespedResponse actualizar(HuespedRequest request, Long id) {
         Huesped huesped = obtenerHuespedActivoOException(id);
-        log.info("Actualizar al huesped");
+        log.info("Actualizando información del huésped con ID: {}", id);
+
         validarCambiosUnicos(request, id);
         huesped.actualizar(
                 request.nombre(),
@@ -66,41 +78,59 @@ public class HuespedServiceImpl implements HuespedService {
                 request.documento(),
                 request.nacionalidad()
         );
-        log.info("Huesped actualizado correctamente");
+
+        log.info("Huésped con ID {} actualizado correctamente", id);
         return huespedMappers.entidadResponse(huesped);
     }
 
     @Override
     public void eliminar(Long id) {
         Huesped huesped = obtenerHuespedActivoOException(id);
-        log.info("Eliminación del huesped");
+        log.info("Procesando eliminación lógica del huésped con ID: {}", id);
+
+        boolean tieneReservasEnCurso = reservaClient.tieneReservasEnCursoPorHabitacionId(id);
+        if (tieneReservasEnCurso) {
+            throw new IllegalStateException("No se puede eliminar el huésped porque posee reservas EN_CURSO");
+        }
+
         huesped.eliminar();
-        log.info("Huesped Elimnado con exito");
-
-
+        log.info("Huésped con ID {} eliminado con éxito", id);
     }
 
-    private Huesped obtenerHuespedActivoOException(Long id){
-        log.info("Buscando huesped activos");
+    private Huesped obtenerHuespedActivoOException(Long id) {
         return huespedRepository.findByIdAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Huesped activo no encontrado con id: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Huésped activo no encontrado con id: " + id));
     }
 
-    private void validarDatosUnicos(HuespedRequest request){
-        log.info("Validando email unico");
-        if (huespedRepository.existsByEmailIgnoreCaseAndEstadoRegistro(request.email().trim(), EstadoRegistro.ACTIVO))
-            throw new IllegalArgumentException("Ya doctor con ese correo: " + request.email());
-        log.info("Validar el telefo");
-        if(huespedRepository.existsByTelefonoAndEstadoRegistro(request.telefono().trim(), EstadoRegistro.ACTIVO))
-            throw new IllegalArgumentException("Ya existe un usuario con ese telefono" + request.telefono());
+    private void validarDatosUnicos(HuespedRequest request) {
+        log.info("Validando datos únicos del huésped");
+
+        if (huespedRepository.existsByEmailIgnoreCaseAndEstadoRegistro(request.email().trim(), EstadoRegistro.ACTIVO)) {
+            throw new IllegalArgumentException("Ya existe un huésped activo con el correo: " + request.email());
+        }
+
+        if (huespedRepository.existsByTelefonoAndEstadoRegistro(request.telefono().trim(), EstadoRegistro.ACTIVO)) {
+            throw new IllegalArgumentException("Ya existe un huésped activo con el teléfono: " + request.telefono());
+        }
+
+        if (huespedRepository.existsByDocumentoAndEstadoRegistro(request.documento().trim(), EstadoRegistro.ACTIVO)) {
+            throw new IllegalArgumentException("Ya existe un huésped activo con el documento: " + request.documento());
+        }
     }
 
-    private void validarCambiosUnicos(HuespedRequest request, Long id){
-        log.info("Validando email unico para actualizar");
-        if (huespedRepository.existsByEmailIgnoreCaseAndEstadoRegistroAndIdNot(request.email().trim(), EstadoRegistro.ACTIVO, id))
-            throw new IllegalArgumentException("Ya doctor con ese correo: " + request.email());
-        log.info("Validar el telefo para actualizar");
-        if(huespedRepository.existsByTelefonoAndEstadoRegistroAndIdNot(request.telefono().trim(), EstadoRegistro.ACTIVO, id))
-            throw new IllegalArgumentException("Ya existe un usuario con ese telefono" + request.telefono());
+    private void validarCambiosUnicos(HuespedRequest request, Long id) {
+        log.info("Validando datos únicos para actualización de huésped ID: {}", id);
+
+        if (huespedRepository.existsByEmailIgnoreCaseAndEstadoRegistroAndIdNot(request.email().trim(), EstadoRegistro.ACTIVO, id)) {
+            throw new IllegalArgumentException("Ya existe otro huésped activo con el correo: " + request.email());
+        }
+
+        if (huespedRepository.existsByTelefonoAndEstadoRegistroAndIdNot(request.telefono().trim(), EstadoRegistro.ACTIVO, id)) {
+            throw new IllegalArgumentException("Ya existe otro huésped activo con el teléfono: " + request.telefono());
+        }
+
+        if (huespedRepository.existsByDocumentoAndEstadoRegistroAndIdNot(request.documento().trim(), EstadoRegistro.ACTIVO, id)) {
+            throw new IllegalArgumentException("Ya existe otro huésped activo con el documento: " + request.documento());
+        }
     }
 }
