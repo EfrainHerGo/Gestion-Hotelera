@@ -56,7 +56,7 @@ public class Habitaciones {
     }
 
     public void eliminar() {
-        this.estadoRegistro = EstadoRegistro.INACTIVO;
+        this.estadoRegistro = EstadoRegistro.ELIMINADO;
     }
     public void establecerEstadoInicial() {
         this.estadoHabitacion = EstadoHabitacion.DISPONIBLE;

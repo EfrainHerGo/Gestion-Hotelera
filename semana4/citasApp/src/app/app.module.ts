@@ -8,7 +8,9 @@ import { LoginComponent } from './components/login/login.component';
 import { NavbarComponent } from './components/commons/navbar/navbar.component';
 import { FooterComponent } from './components/commons/footer/footer.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
-
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';   
+import { AuthInterceptor } from './interceptors/auth-interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,9 +22,14 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

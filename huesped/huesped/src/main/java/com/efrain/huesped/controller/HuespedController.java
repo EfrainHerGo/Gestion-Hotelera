@@ -16,11 +16,15 @@ public class HuespedController extends CommonController<HuespedRequest, HuespedR
     public HuespedController(HuespedService service) {
         super(service);
     }
+
+
     public ResponseEntity<HuespedResponse> obtenerHuespedPoridSinEstado(
             @PathVariable @Positive(message = "El id debe ser positivo") Long id
     ){
         return  ResponseEntity.ok(service.obtenerHuespedPorIdSinEstado(id));
     }
+
+
 
 }
 

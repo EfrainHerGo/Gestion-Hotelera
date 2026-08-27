@@ -1,4 +1,4 @@
-export interface Usuariorequest{
+export interface UsuarioRequest{
     username: string,
     password: string,
     roles: string[]
