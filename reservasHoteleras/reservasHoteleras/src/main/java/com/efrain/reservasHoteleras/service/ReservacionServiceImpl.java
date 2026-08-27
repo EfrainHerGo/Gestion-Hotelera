@@ -80,7 +80,7 @@ public class ReservacionServiceImpl implements ReservacionService {
 
         HuespedResponse huesped = huespedClient.obtenerHuespedPorId(request.idHuesped());
 
-        HabitacionResponse habitacion = habitacionClient.obtenerHabitacionPorId(request.idHabitacion());
+        HabitacionResponse habitacion = habitacionClient.obtenerPorId(request.idHabitacion());
 
         Reservacion reservacion = Reservacion.crear(
                 request.idHuesped(),
@@ -109,7 +109,7 @@ public class ReservacionServiceImpl implements ReservacionService {
 
         if (reservacion.getEstadoReservacion() == EstadoReservacion.CONFIRMADA) {
             if (!Objects.equals(reservacion.getIdHabitacion(), request.idHabitacion())) {
-                HabitacionResponse nuevaHabitacion = habitacionClient.obtenerHabitacionPorId(request.idHabitacion());
+                HabitacionResponse nuevaHabitacion = habitacionClient.obtenerPorId(request.idHabitacion());
 
                 habitacionClient.cambiarEstado(reservacion.getIdHabitacion(), EstadoHabitacion.DISPONIBLE.getCodigo());
                 habitacionClient.cambiarEstado(request.idHabitacion(), EstadoHabitacion.OCUPADA.getCodigo());
@@ -165,7 +165,7 @@ public class ReservacionServiceImpl implements ReservacionService {
 
     private ReservacionResponse enriquecerRespuesta(Reservacion reservacion) {
         HuespedResponse huesped = huespedClient.obtenerHuespedPorId(reservacion.getIdHuesped());
-        HabitacionResponse habitacion = habitacionClient.obtenerHabitacionPorId(reservacion.getIdHabitacion());
+        HabitacionResponse habitacion = habitacionClient.obtenerPorId(reservacion.getIdHabitacion());
         return reservacionMapper.entidadResponse(reservacion, huesped, habitacion);
     }
     private Long obtenerNuevoEstadoHabitacion(Long idEstadoReservacion) {
