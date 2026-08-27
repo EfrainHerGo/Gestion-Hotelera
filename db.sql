@@ -1,7 +1,10 @@
--- =================================================================
--- TABLA: USUARIOS
--- =================================================================
-CREATE TABLE usuarios (
+
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS huespedes;
+DROP TABLE IF EXISTS habitaciones;
+DROP TABLE IF EXISTS reservaciones;
+
+CREATE TABLE IF NOT EXISTS usuarios (
                           id NUMBER GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_usuarios PRIMARY KEY,
                           username VARCHAR2(20) NOT NULL,
                           password VARCHAR2(255) NOT NULL,
@@ -22,10 +25,8 @@ CREATE UNIQUE INDEX uq_usr_username_activo ON usuarios (
     );
 
 
--- =================================================================
--- TABLA: HUESPEDES
--- =================================================================
-CREATE TABLE huespedes (
+
+CREATE TABLE IF NOT EXISTS huespedes (
                            id_huesped NUMBER GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_huespedes PRIMARY KEY,
                            nombre VARCHAR2(50) NOT NULL,
                            apellido_paterno VARCHAR2(50) NOT NULL,
@@ -41,7 +42,7 @@ CREATE TABLE huespedes (
                            CONSTRAINT chk_hues_pat CHECK (LENGTH(apellido_paterno) BETWEEN 2 AND 50),
                            CONSTRAINT chk_hues_email_fmt CHECK (REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')),
                            CONSTRAINT chk_hues_telefono_fmt CHECK (REGEXP_LIKE(telefono, '^[0-9]{10}$')),
-                           CONSTRAINT chk_hues_estado CHECK (estado_registro IN ('ACTIVO', 'INACTIVO'))
+                           CONSTRAINT chk_hues_estado CHECK (estado_registro IN ('ACTIVO', 'ELIMINADO'))
 );
 
 -- Unicidad condicional para Email, Teléfono y Documento entre registros ACTIVOS
@@ -58,10 +59,8 @@ CREATE UNIQUE INDEX uq_hues_doc_activo ON huespedes (
     );
 
 
--- =================================================================
--- TABLA: HABITACIONES
--- =================================================================
-CREATE TABLE habitaciones (
+
+CREATE TABLE IF NOT EXISTS habitaciones (
                               id_habitaciones NUMBER GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_habitaciones PRIMARY KEY,
                               numero_habitacion NUMBER(6) NOT NULL,
                               tipo VARCHAR2(50) NOT NULL,
@@ -74,7 +73,7 @@ CREATE TABLE habitaciones (
                               CONSTRAINT chk_hab_numero CHECK (numero_habitacion > 0),
                               CONSTRAINT chk_hab_precio CHECK (precio > 0),
                               CONSTRAINT chk_hab_capacidad CHECK (capacidad >= 1),
-                              CONSTRAINT chk_hab_estado CHECK (estado_registro IN ('ACTIVO', 'INACTIVO'))
+                              CONSTRAINT chk_hab_estado CHECK (estado_registro IN ('ACTIVO', 'ELIMINADO'))
 );
 
 -- Unicidad del Número de Habitación entre registros ACTIVOS
@@ -83,10 +82,8 @@ CREATE UNIQUE INDEX uq_hab_numero_activo ON habitaciones (
     );
 
 
--- =================================================================
--- TABLA: RESERVACIONES (Sin Foreign Keys)
--- =================================================================
-CREATE TABLE reservaciones (
+
+CREATE TABLE IF NOT EXISTS reservaciones (
                                id_reservacion NUMBER GENERATED ALWAYS AS IDENTITY CONSTRAINT pk_reservaciones PRIMARY KEY,
                                idhuesped NUMBER NOT NULL,
                                id_habitacion NUMBER NOT NULL,

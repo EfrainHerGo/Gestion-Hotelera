@@ -10,13 +10,6 @@ spring:
       server:
         webflux:
           routes:
-            - id: habitaciones
-              uri: lb://habitaciones
-              predicates:
-                - Path=/api/habitaciones/**
-              filters:
-                - StripPrefix=2
-
             - id: huesped
               uri: lb://huesped
               predicates:
@@ -24,17 +17,24 @@ spring:
               filters:
                 - StripPrefix=2
 
-            - id: reservasHoteleras
-              uri: lb://reservasHoteleras
-              predicates:
-                - Path=/api/reservasHoteleras/**
-              filters:
-                - StripPrefix=2
-
             - id: usuarios
               uri: lb://usuarios
               predicates:
                 - Path=/api/usuarios/**
+              filters:
+                - StripPrefix=2
+
+            - id: reservasHoteleras
+              uri: lb://reservasHoteleras
+              predicates:
+                - Path=/api/reservaciones/**
+              filters:
+                - StripPrefix=2
+
+            - id: habitaciones
+              uri: lb://habitaciones
+              predicates:
+                - Path=/api/habitaciones/**
               filters:
                 - StripPrefix=2
 
