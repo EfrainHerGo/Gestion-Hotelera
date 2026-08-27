@@ -109,7 +109,6 @@ public class HabitacionServiceImpl implements HabitacionService {
     }
 
     private Habitaciones obtenerHabitacionActivaOrExcep(Long id) {
-
         log.info("Buscando habitación con id {}", id);
 
         return habitacionesRepository
