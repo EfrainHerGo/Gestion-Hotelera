@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,5 +27,19 @@ public class HabitacionController extends CommonController<HabitacionRequest, Ha
             Long id
     ) {
         return ResponseEntity.ok(service.obtenerHabitacionPorIdSinEstado(id));
+    }
+
+    @PutMapping("/{id}/estado/{idEstado}")
+    public ResponseEntity<Void> cambiarEstado(
+            @PathVariable
+            @Positive(message = "Id debe ser positivo")
+            Long id,
+
+            @PathVariable
+            @Positive(message = "Id estado debe ser positivo")
+            Long idEstado
+    ) {
+        service.cambiarEstado(id, idEstado);
+        return ResponseEntity.noContent().build();
     }
 }

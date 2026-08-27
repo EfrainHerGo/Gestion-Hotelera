@@ -1,5 +1,6 @@
 package com.efrain.huesped.repository;
 
+
 import com.efrain.Common.enums.EstadoRegistro;
 import com.efrain.huesped.entities.Huesped;
 import org.springframework.data.jpa.repository.JpaRepository;

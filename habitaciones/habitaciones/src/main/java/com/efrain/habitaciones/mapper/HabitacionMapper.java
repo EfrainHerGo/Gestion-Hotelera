@@ -22,10 +22,11 @@ public class HabitacionMapper implements CommonMapper<HabitacionRequest, Habitac
     @Override
     public HabitacionResponse entidadResponse(Habitaciones entidad) {
         return new HabitacionResponse(
+                entidad.getIdHabitaciones(),
                 entidad.getNumeroHabitacion(),
                 entidad.getTipo(),
                 entidad.getPrecio(),
-                entidad.getCapacidad()
+                entidad.getCapacidad(),
+                entidad.getEstadoHabitacion()
         );
-    }
-}
+    }}
