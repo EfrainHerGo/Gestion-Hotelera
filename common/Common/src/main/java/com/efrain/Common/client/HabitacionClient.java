@@ -17,4 +17,9 @@ public interface HabitacionClient {
     @PutMapping("/{idHabitacion}/estado/{idEstado}")
     ResponseEntity<Void> cambiarEstado( @PathVariable @Positive(message = "El id habitacion debe ser psoitivo") Long idHabitacion,
                                        @PathVariable @Positive(message = "El idEstado debe ser psoitivo")Long idEstado);
+
+    @PutMapping("/{idHabitacion}/liberar-finalizacion-reserva")
+    ResponseEntity<Void> liberarHabitacionPorFinalizacionReserva(
+            @PathVariable Long idHabitacion
+    );
 }

@@ -74,4 +74,16 @@ public class Habitaciones {
 
         this.estadoHabitacion = nuevoEstado;
     }
+
+    public void liberarPorFinalizacionReserva() {
+
+        if (this.estadoHabitacion != EstadoHabitacion.OCUPADA) {
+            throw new IllegalStateException(
+                    "La habitación debe estar OCUPADA para ser liberada"
+            );
+        }
+
+        this.estadoHabitacion = EstadoHabitacion.DISPONIBLE;
+    }
+
 }

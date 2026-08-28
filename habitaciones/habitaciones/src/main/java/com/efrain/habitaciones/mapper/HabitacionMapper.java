@@ -26,7 +26,6 @@ public class HabitacionMapper implements CommonMapper<HabitacionRequest, Habitac
                 entidad.getNumeroHabitacion(),
                 entidad.getTipo(),
                 entidad.getPrecio(),
-                entidad.getCapacidad(),
-                entidad.getEstadoHabitacion()
+                entidad.getCapacidad()
         );
     }}

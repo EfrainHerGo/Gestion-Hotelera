@@ -1,6 +1,5 @@
 package com.efrain.Common.dto.Habitacion;
 
-import com.efrain.Common.enums.EstadoHabitacion;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -22,10 +21,8 @@ public record HabitacionRequest(
 
         @NotNull(message = "Es requerido")
         @Min(value = 1, message = "La capacidad mínima es de 1")
-        Integer capacidad,
+        Integer capacidad
 
-        @NotNull(message = "El estado es requerido")
-        EstadoHabitacion estadoHabitacion
 
 ) {
 }

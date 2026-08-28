@@ -8,7 +8,7 @@ public record HabitacionResponse(
         Integer numeroHabitacion,
         String tipo,
         BigDecimal precio,
-        Integer capacidad,
-        EstadoHabitacion estadoHabitacion
+        Integer capacidad
+
 ) {
 }
