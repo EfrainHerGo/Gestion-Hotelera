@@ -87,15 +87,15 @@ public class HuespedServiceImpl implements HuespedService {
     public void eliminar(Long id) {
         Huesped huesped = obtenerHuespedActivoOException(id);
         log.info("Procesando eliminación lógica del huésped con ID: {}", id);
-
-        boolean tieneReservasEnCurso = reservaClient.tieneReservasEnCursoPorHabitacionId(id);
+        /*boolean tieneReservasEnCurso = reservaClient.tieneReservasEnCursoPorHabitacionId(id);
         if (tieneReservasEnCurso) {
-            throw new IllegalStateException("No se puede eliminar el huésped porque posee reservas EN_CURSO");
-        }
-
+            throw new IllegalStateException("No se puede eliminar un huésped con reservas EN_CURSO");
+        }*/
         huesped.eliminar();
         log.info("Huésped con ID {} eliminado con éxito", id);
     }
+
+
 
     private Huesped obtenerHuespedActivoOException(Long id) {
         return huespedRepository.findByIdAndEstadoRegistro(id, EstadoRegistro.ACTIVO)

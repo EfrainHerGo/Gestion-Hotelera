@@ -42,4 +42,14 @@ public class HabitacionController extends CommonController<HabitacionRequest, Ha
         service.cambiarEstado(id, idEstado);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/liberar-finalizacion-reserva")
+    public ResponseEntity<Void> liberarHabitacionPorFinalizacionReserva(
+            @PathVariable
+            @Positive(message = "Id debe ser positivo")
+            Long id
+    ) {
+        service.liberarHabitacionPorFinalizacionReserva(id);
+        return ResponseEntity.noContent().build();
+    }
 }

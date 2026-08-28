@@ -137,25 +137,72 @@ public class ReservacionServiceImpl implements ReservacionService {
     @Override
     public void actualizarEstadoReservacion(Long idReservacion, Long codigoEstadoReservacion) {
         Reservacion reservacion = obtenerReservacionActivaOException(idReservacion);
-        EstadoReservacion nuevoEstado = EstadoReservacion.obtenerEstadoReservacionPorCodigo(codigoEstadoReservacion);
+        EstadoReservacion nuevoEstado =
+                EstadoReservacion.obtenerEstadoReservacionPorCodigo(codigoEstadoReservacion);
 
-        log.info("Cambiando estado de reservación {} de {} a {}", idReservacion, reservacion.getEstadoReservacion(), nuevoEstado);
+        log.info(
+                "Cambiando estado de reservación {} de {} a {}",
+                idReservacion,
+                reservacion.getEstadoReservacion(),
+                nuevoEstado
+        );
 
         reservacion.cambiarEstado(nuevoEstado);
 
-        if (nuevoEstado == EstadoReservacion.FINALIZADA || nuevoEstado == EstadoReservacion.CANCELADA) {
-            habitacionClient.cambiarEstado(reservacion.getIdHabitacion(), EstadoHabitacion.DISPONIBLE.getCodigo());
+        if (nuevoEstado == EstadoReservacion.FINALIZADA) {
+
+            habitacionClient.liberarHabitacionPorFinalizacionReserva(
+                    reservacion.getIdHabitacion()
+            );
+
+        } else if (nuevoEstado == EstadoReservacion.CANCELADA) {
+
+            habitacionClient.cambiarEstado(
+                    reservacion.getIdHabitacion(),
+                    EstadoHabitacion.DISPONIBLE.getCodigo()
+            );
         }
     }
-
     @Override
     public void eliminar(Long id) {
         Reservacion reservacion = obtenerReservacionActivaOException(id);
-        log.info("Cancelando la reservación ID: {}", id);
 
-        reservacion.cancelar();
-        habitacionClient.cambiarEstado(reservacion.getIdHabitacion(), EstadoHabitacion.DISPONIBLE.getCodigo());
-        reservacion.eliminar();
+        log.info(
+                "Eliminando reservación ID: {} en estado {}",
+                id,
+                reservacion.getEstadoReservacion()
+        );
+
+        switch (reservacion.getEstadoReservacion()) {
+
+            case CONFIRMADA:
+                reservacion.cancelar();
+
+                habitacionClient.cambiarEstado(
+                        reservacion.getIdHabitacion(),
+                        EstadoHabitacion.DISPONIBLE.getCodigo()
+                );
+
+                reservacion.eliminar();
+
+                log.info(
+                        "Reservación {} CANCELADA y habitación {} liberada",
+                        id,
+                        reservacion.getIdHabitacion()
+                );
+                break;
+
+            case EN_CURSO:
+                throw new IllegalStateException(
+                        "No se puede cancelar una reservación EN_CURSO"
+                );
+
+            case FINALIZADA:
+            case CANCELADA:
+                throw new IllegalStateException(
+                        "No se puede eliminar una reservación FINALIZADA o CANCELADA"
+                );
+        }
     }
 
     private Reservacion obtenerReservacionActivaOException(Long id) {

@@ -49,14 +49,14 @@ public class Reservacion {
         validarFechas(fechaIngreso, fechaSalida);
     }
 
-    private static void validarFechas(LocalDateTime fechaIngreso, LocalDateTime fechaSalida) {
-        if (fechaIngreso == null || fechaSalida == null) {
-            throw new IllegalArgumentException("Las fechas de entrada y salida son obligatorias");
+        private static void validarFechas(LocalDateTime fechaIngreso, LocalDateTime fechaSalida) {
+            if (fechaIngreso == null || fechaSalida == null) {
+                throw new IllegalArgumentException("Las fechas de entrada y salida son obligatorias");
+            }
+            if (!fechaIngreso.isBefore(fechaSalida)) {
+                throw new IllegalArgumentException("No se manejan fechas ni horas reales.");
+            }
         }
-        if (!fechaIngreso.isBefore(fechaSalida)) {
-            throw new IllegalArgumentException("La fecha de entrada debe ser anterior a la fecha de salida");
-        }
-    }
 
     private static void validarId(Long id, String campo) {
         if (id == null || id <= 0) {

@@ -100,14 +100,18 @@ public class HabitacionServiceImpl implements HabitacionService {
     @Override
     public void eliminar(Long id) {
         Habitaciones habitacion = obtenerHabitacionActivaOrExcep(id);
+
         if (habitacion.getEstadoHabitacion() == EstadoHabitacion.OCUPADA) {
             throw new IllegalStateException(
                     "No se puede eliminar una habitación OCUPADA"
             );
         }
+
         habitacion.eliminar();
+
         log.info("Habitación eliminada");
     }
+
     @Override
     public void cambiarEstado(Long id, Long idEstado) {
 
@@ -134,11 +138,39 @@ public class HabitacionServiceImpl implements HabitacionService {
                 nuevoEstado
         );
     }
+
+    @Override
+    public void liberarHabitacionPorFinalizacionReserva(Long id) {
+
+        Habitaciones habitacion = obtenerHabitacionActivaOrExcep(id);
+
+        log.info(
+                "Liberando habitación {} por finalización de reserva...",
+                id
+        );
+
+        if (habitacion.getEstadoHabitacion() != EstadoHabitacion.OCUPADA) {
+            throw new IllegalStateException(
+                    "La habitación debe estar OCUPADA para liberarse por finalización de reserva"
+            );
+        }
+
+        habitacion.liberarPorFinalizacionReserva();
+
+        log.info(
+                "Habitación {} liberada correctamente: OCUPADA → DISPONIBLE",
+                id
+        );
+    }
+
     private Habitaciones obtenerHabitacionActivaOrExcep(Long id) {
         log.info("Buscando habitación con id {}", id);
 
         return habitacionesRepository
-                .findByIdHabitacionesAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
+                .findByIdHabitacionesAndEstadoRegistro(
+                        id,
+                        EstadoRegistro.ACTIVO
+                )
                 .orElseThrow(() ->
                         new RecursoNoEncontradoException(
                                 "No se encontró la habitación activa con id " + id
