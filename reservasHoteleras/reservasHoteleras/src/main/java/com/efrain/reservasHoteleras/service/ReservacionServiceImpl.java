@@ -100,35 +100,62 @@ public class ReservacionServiceImpl implements ReservacionService {
     @Override
     public ReservacionResponse actualizar(ReservacionRequest request, Long id) {
         Reservacion reservacion = obtenerReservacionActivaOException(id);
-        log.info("Actualizando reservación ID: {} en estado {}", id, reservacion.getEstadoReservacion());
+
+        log.info("Actualizando reservación ID: {} en estado {}",
+                id, reservacion.getEstadoReservacion());
 
         if (reservacion.getEstadoReservacion() == EstadoReservacion.FINALIZADA ||
                 reservacion.getEstadoReservacion() == EstadoReservacion.CANCELADA) {
-            throw new IllegalStateException("No se permiten modificaciones en reservaciones FINALIZADAS o CANCELADAS");
+
+            throw new IllegalStateException(
+                    "No se permiten modificaciones en reservaciones FINALIZADAS o CANCELADAS"
+            );
         }
 
         if (reservacion.getEstadoReservacion() == EstadoReservacion.CONFIRMADA) {
-            if (!Objects.equals(reservacion.getIdHabitacion(), request.idHabitacion())) {
-                HabitacionResponse nuevaHabitacion = habitacionClient.obtenerPorId(request.idHabitacion());
 
-                habitacionClient.cambiarEstado(reservacion.getIdHabitacion(), EstadoHabitacion.DISPONIBLE.getCodigo());
-                habitacionClient.cambiarEstado(request.idHabitacion(), EstadoHabitacion.OCUPADA.getCodigo());
+            if (!Objects.equals(
+                    reservacion.getIdHabitacion(),
+                    request.idHabitacion())) {
+
+                habitacionClient.obtenerPorId(request.idHabitacion());
+
+                habitacionClient.cambiarEstado(
+                        reservacion.getIdHabitacion(),
+                        EstadoHabitacion.DISPONIBLE.getCodigo()
+                );
+
+                habitacionClient.cambiarEstado(
+                        request.idHabitacion(),
+                        EstadoHabitacion.OCUPADA.getCodigo()
+                );
             }
 
             huespedClient.obtenerHuespedPorId(request.idHuesped());
+
             reservacion.actualizarConfirmada(
                     request.idHuesped(),
                     request.idHabitacion(),
                     request.fechaEntrada(),
                     request.fechaSalida()
             );
+
         } else if (reservacion.getEstadoReservacion() == EstadoReservacion.EN_CURSO) {
-            if (!Objects.equals(reservacion.getIdHuesped(), request.idHuesped()) ||
-                    !Objects.equals(reservacion.getIdHabitacion(), request.idHabitacion()) ||
-                    !Objects.equals(reservacion.getFechaIngreso(), request.fechaEntrada())) {
-                throw new IllegalStateException("Con Check-in realizado (EN_CURSO), solo se permite modificar la fecha de salida");
+
+            if (request.fechaSalida() == null) {
+                throw new IllegalStateException(
+                        "La fecha de salida es requerida"
+                );
             }
-            reservacion.actualizarFechaSalidaEnCurso(request.fechaSalida());
+            if (request.fechaSalida().isBefore(reservacion.getFechaIngreso())) {
+                throw new IllegalStateException(
+                        "La fecha de salida no puede ser anterior a la fecha de entrada"
+                );
+            }
+
+            reservacion.actualizarFechaSalidaEnCurso(
+                    request.fechaSalida()
+            );
         }
 
         return enriquecerRespuesta(reservacion);
