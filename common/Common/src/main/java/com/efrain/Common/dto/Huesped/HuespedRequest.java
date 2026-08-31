@@ -23,10 +23,10 @@ public record HuespedRequest(
         @Size(min = 5, max = 10, message = "El telefono debe tener 10 caracteres")
         String telefono,
         @NotBlank(message = "El documento es requerida")
-        @Size(min = 10, max = 20, message = "EL documento debe tener exacatemnte 20 caracteres")
+        @Size(min = 7, max = 20, message = "EL documento debe tener exacatemnte 20 caracteres")
         String documento,
         @NotBlank(message = "La nacionalidad es requerida")
-        @Size(min = 12, max = 12, message = "La nacionadlidad debe tener exacatemnte 12 caracteres")
+        @Size(min = 5, max = 12, message = "La nacionadlidad debe tener exacatemnte 12 caracteres")
         String nacionalidad
 
 

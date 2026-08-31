@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
                           CONSTRAINT chk_usr_pass_len CHECK (LENGTH(password) >= 8),
                           CONSTRAINT chk_usr_pass_alpha CHECK (REGEXP_LIKE(password, '[A-Za-z]')),
                           CONSTRAINT chk_usr_pass_num CHECK (REGEXP_LIKE(password, '[0-9]')),
-                          CONSTRAINT chk_usr_estado CHECK (estado_registro IN ('ACTIVO', 'INACTIVO'))
+                          CONSTRAINT chk_usr_estado CHECK (estado_registro IN ('ACTIVO', 'ELIMINADO'))
 );
 
 -- Unicidad de Username entre registros ACTIVOS
@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS huespedes (
                            nacionalidad VARCHAR2(50) NOT NULL,
                            estado_registro VARCHAR2(10) DEFAULT 'ACTIVO' NOT NULL,
 
-    -- Validaciones
                            CONSTRAINT chk_hues_nombre CHECK (LENGTH(nombre) BETWEEN 2 AND 50),
                            CONSTRAINT chk_hues_pat CHECK (LENGTH(apellido_paterno) BETWEEN 2 AND 50),
                            CONSTRAINT chk_hues_email_fmt CHECK (REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')),
